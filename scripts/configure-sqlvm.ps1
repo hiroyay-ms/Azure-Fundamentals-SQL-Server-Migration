@@ -11,7 +11,20 @@ function Disable-InternetExplorerESC {
 # Disable IE ESC
 Disable-InternetExplorerESC
 
+# Enable TLS 1.2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 # Download and Extract
-Invoke-WebRequest 'https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/setup.zip' -OutFile 'C:\_setup.zip'
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-[System.IO.Compression.ZipFile]::ExtractToDirectory('C:\_setup.zip','C:\_work')
+mkdir C:\_work
+Invoke-WebRequest 'https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/backup/AdventureWorksLT2014.bak' -OutFile 'C:\_work\AdventureWorksLT2014.bak'
+
+# Restore Database
+function Restore-Database {
+    $serverName = 'localhost'
+    $databaseName = 'AdventureWorksLT2014'
+
+    $cmd = "RESTORE DATABASE [" + $databaseName + "] FROM  DISK = N'C:\_work\AdventureWorksLT2014.bak' WITH  FILE = 2,  MOVE N'AdventureWorksLT2008_Data' TO N'F:\data\AdventureWorksLT2012_Data.mdf',  MOVE N'AdventureWorksLT2008_Log' TO N'F:\log\AdventureWorksLT2012_log.ldf',  NOUNLOAD,  STATS = 5"
+    Invoke-SqlCmd -ServerInstance $serverName -Database "master" -Query $cmd
+}
+
+Restore-Database
