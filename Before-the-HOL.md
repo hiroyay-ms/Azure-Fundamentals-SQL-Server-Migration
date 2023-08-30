@@ -76,3 +76,15 @@ Sep. 2023
 ※ データベース サーバー ‐ OS: Windows Server 2012 R2, Database: SQL Server 2014 SP3
 
 ※ 作業用仮想マシン - OS: Windows Server 2022
+
+<br />
+
+### データベースのリストア
+
+- データベース サーバーに接続
+
+- SQL Server Management Studio を起動、AdventureWorksLT2014 データベースの有無を確認
+
+- AdventureWorksLT2014 がない場合、C:¥_work の restore-database.ps1 を実行し、データベースを復元
+
+  <img src="images/restore-database.png" />
