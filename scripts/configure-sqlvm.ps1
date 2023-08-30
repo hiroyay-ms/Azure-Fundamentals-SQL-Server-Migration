@@ -18,9 +18,3 @@ Disable-InternetExplorerESC
 Invoke-WebRequest 'https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/setup.zip' -OutFile 'C:\_setup.zip'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [System.IO.Compression.ZipFile]::ExtractToDirectory('C:\_setup.zip','C:\_work')
-
-Start-Sleep -s 10
-
-# Restore Database
-$cmd = "RESTORE DATABASE [AdventureWorksLT2014] FROM  DISK = N'C:\_work\AdventureWorksLT2014.bak' WITH  FILE = 2,  MOVE N'AdventureWorksLT2008_Data' TO N'F:\data\AdventureWorksLT2012_Data.mdf',  MOVE N'AdventureWorksLT2008_Log' TO N'F:\log\AdventureWorksLT2012_log.ldf',  NOUNLOAD,  STATS = 5"
-Invoke-SqlCmd -ServerInstance "localhost" -Database "master" -Query $cmd
