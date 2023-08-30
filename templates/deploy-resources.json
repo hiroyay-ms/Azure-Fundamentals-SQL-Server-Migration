@@ -1,0 +1,429 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetwork": {
+            "type": "string",
+            "defaultValue": "vnet-spoke",
+            "metadata": {
+                "description": "仮想ネットワーク名"
+            }
+        },
+        "addressPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/16",
+            "metadata": {
+                "description": "IPv4 アドレス空間"
+            }
+        },
+        "subnet1": {
+            "type": "string",
+            "defaultValue": "Subnet-1",
+            "metadata": {
+                "description": "サブネット名"
+            }
+        },
+        "subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.1.1.0/24",
+            "metadata": {
+                "description": "サブネット アドレス範囲"
+            }
+        },
+        "networkSecurityGroup": {
+            "type": "string",
+            "defaultValue": "nsg-vnet-spoke-subnet-1",
+            "metadata": {
+                "description": "ネットワーク セキュリティ グループ"
+            }
+        },
+        "sqlServerName": {
+            "type": "string",
+            "defaultValue": "vm-sqlserver",
+            "metadata": {
+                "description": "仮想マシン名 (SQL Server)"
+            }
+        },
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "vm-datastudio",
+            "metadata": {
+                "description": "仮想マシン名 (Azure Data Studio)"
+            }
+        },
+        "adminUserName": {
+            "type": "string",
+            "defaultValue": "AzureUser",
+            "metadata": {
+                "description": "管理者ユーザー名"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "管理者パスワード"
+            }
+        },
+        "machineSize": {
+            "type": "string",
+            "defaultValue": "Standard_D4s_v5",
+            "metadata": {
+                "description": "仮想マシン サイズ"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "sqlNetworkInterface": "[concat('nic-', parameters('sqlServerName'))]",
+        "sqlOsDisk": "[concat(parameters('sqlServerName'), '-Osdisk')]",
+        "sqlDataDisk": "[concat(parameters('sqlServerName'), '-Datadisk')]",
+        "vmNetworkInterface": "[concat('nic-', parameters('virtualMachineName'))]",
+        "vmOsDisk": "[concat(parameters('virtualMachineName'), '-Osdisk')]",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet1'))]",
+        "customScriptUrl": "https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/configure-sqlvm.ps1"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('networkSecurityGroup')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('virtualNetwork')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefix')]"
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "subnets",
+                    "apiVersion": "2022-09-01",
+                    "name": "[parameters('subnet1')]",
+                    "properties": {
+                        "addressPrefix": "[parameters('subnet1Prefix')]",
+                        "networkSecurityGroup": {
+                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup'))]"
+                        }
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup'))]",
+                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork'))]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-11-01",
+            "name": "[variables('sqlNetworkInterface')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet1'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/disks",
+            "apiVersion": "2023-01-02",
+            "name": "[variables('sqlDataDisk')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "creationData": {
+                    "createOption": "Empty"
+                },
+                "diskSizeGB": 8,
+                "diskIOPSReadWrite": 500,
+                "diskMBpsReadWrite": 60,
+                "encryption": {
+                    "type": "EncryptionAtRestWithPlatformKey"
+                },
+                "networkAccessPolicy": "AllowAll",
+                "publicNetworkAccess": "Enabled",
+                "diskState": "Reserved"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2023-03-01",
+            "name": "[parameters('sqlServerName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('machineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[variables('sqlOsDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS"
+                        },
+                        "deleteOption": "Delete"
+                    },
+                    "imageReference": {
+                        "publisher": "microsoftsqlserver",
+                        "offer": "sql2014sp3-ws2012r2",
+                        "sku": "standard",
+                        "version": "latest"
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "name": "[variables('sqlDataDisk')]",
+                            "createOption": "Attach",
+                            "caching": "None",
+                            "managedDisk": {
+                                "id": "[resourceId('Microsoft.Compute/disks', variables('sqlDataDisk'))]"
+                            },
+                            "deleteOption": "Delete"
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('sqlNetworkInterface'))]",
+                            "properties": {
+                                "deleteOption": "Delete"
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('sqlServerName')]",
+                    "adminUsername": "[parameters('adminUserName')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByPlatform",
+                            "automaticByPlatformSettings": {
+                                "bypassPlatformSafetyChecksOnUserSchedule": true
+                            },
+                            "assessmentMode": "AutomaticByPlatform",
+                            "enableHotpatching": false
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2021-07-01",
+                    "name": "SetupSqlVM",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', parameters('sqlServerName'))]",
+                        "[resourceId('Microsoft.SqlVirtualMachine/sqlVirtualMachines', parameters('sqlServerName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.10",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[variables('customScriptUrl')]"
+                            ],
+                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File configure-sqlvm.ps1"
+                        }
+                    }
+                }
+            ],
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/disks', variables('sqlDataDisk'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('sqlNetworkInterface'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.SqlVirtualMachine/sqlVirtualMachines",
+            "name": "[parameters('sqlServerName')]",
+            "apiVersion": "2022-07-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('sqlServerName'))]",
+                "sqlManagement": "Full",
+                "sqlserverLicenseType": "PAYG",
+                "leastPrivilegeMode": "Enabled",
+                "autoPatchingSettings": {
+                    "enable": true,
+                    "dayOfWeek": "Sunday",
+                    "maintenanceWindowStartingHour": "2",
+                    "maintenanceWindowDuration": "60"
+                },
+                "keyVaultCredentialSettings": {
+                    "enable": false,
+                    "credentialName": ""
+                },
+                "storageConfigurationSettings": {
+                    "diskConfigurationType": "NEW",
+                    "storageWorkloadType": "General",
+                    "sqlDataSettings": {
+                        "luns": [0],
+                        "defaultFilePath": "F:\\data"
+                    },
+                    "sqlLogSettings": {
+                        "luns": [0],
+                        "defaultFilePath": "F:\\log"
+                    },
+                    "sqlTempDbSettings": {
+                        "luns": [0],
+                        "defaultFilePath": "F:\\tempdb",
+                        "dataFileCount": 2,
+                        "dataFileSize": 8,
+                        "dataFileGrowth": 64,
+                        "logFileSize": 8,
+                        "logGrowth": 64
+                    },
+                    "sqlSystemDbOnDataDisk": false
+                },
+                "serverConfigurationsManagementSettings": {
+                    "sqlConnectivityUpdateSettings": {
+                        "connectivityType": "PRIVATE",
+                        "port": 1433,
+                        "sqlAuthUpdateUserName": "sqladmin",
+                        "sqlAuthUpdatePassword": "[parameters('adminPassword')]"
+                    },
+                    "additionalFeaturesServerConfigurations": {
+                        "isRServicesEnabled": false
+                    },
+                    "sqlInstanceSettings": {
+                        "maxDop": 0,
+                        "isOptimizeForAdHocWorkloadsEnabled": false,
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "minServerMemoryMB": 0,
+                        "maxServerMemoryMB": 2147483647
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('sqlServerName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-11-01",
+            "name": "[variables('vmNetworkInterface')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet1'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2023-03-01",
+            "name": "[parameters('virtualMachineName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('machineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[variables('vmOsDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS"
+                        },
+                        "deleteOption": "Delete"
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2022-datacenter-g2",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNetworkInterface'))]",
+                            "properties": {
+                                "deleteOption": "Delete"
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUserName')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByPlatform",
+                            "automaticByPlatformSettings": {
+                                "bypassPlatformSafetyChecksOnUserSchedule": true
+                            },
+                            "assessmentMode": "AutomaticByPlatform",
+                            "enableHotpatching": false
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNetworkInterface'))]"
+            ]
+        }
+    ],
+    "outputs": {}
+}
