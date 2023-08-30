@@ -15,8 +15,11 @@ Disable-InternetExplorerESC
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # Download and Extract
-mkdir C:\_work
-Invoke-WebRequest 'https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/backup/AdventureWorksLT2014.bak' -OutFile 'C:\_work\AdventureWorksLT2014.bak'
+Invoke-WebRequest 'https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/setup.zip' -OutFile 'C:\_setup.zip'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory('C:\_setup.zip','C:\_work')
+
+Start-Sleep -s 10
 
 # Restore Database
 function Restore-Database {
