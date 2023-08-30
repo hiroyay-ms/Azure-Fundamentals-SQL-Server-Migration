@@ -7,7 +7,7 @@ Sep. 2023
 
 - [名前付け規則を定義する](https://learn.microsoft.com/ja-jp/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)
 
-- [Azure リソースの種類に推奨される省略形](https://raw.githubusercontent.com/hiroyay-ms/AzureContainerApps-Hands-on-Lab-1/main/Before%20the%20HOL.md)
+- [Azure リソースの種類に推奨される省略形](https://learn.microsoft.com/ja-jp/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations)
 
 <br />
 
@@ -15,7 +15,7 @@ Sep. 2023
 
 <br />
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/templates/deploy-vnet-hub.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhiroyay-ms%2FAzure-Fundamentals-SQL-Server-Migration%2Fmain%2Ftemplates%2Fdeploy-vnet-hub.json)
 
 ### パラメーター
 
@@ -41,7 +41,7 @@ Sep. 2023
 
 <br />
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/templates/deploy-resources.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhiroyay-ms%2FAzure-Fundamentals-SQL-Server-Migration%2Fmain%2Ftemplates%2Fdeploy-resources.json)
 
 ### パラメーター
 
