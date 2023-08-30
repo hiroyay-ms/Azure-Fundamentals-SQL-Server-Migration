@@ -80,7 +80,7 @@
         "vmNetworkInterface": "[concat('nic-', parameters('virtualMachineName'))]",
         "vmOsDisk": "[concat(parameters('virtualMachineName'), '-Osdisk')]",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet1'))]",
-        "customScriptUrl": "https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/configure-sqlvm.ps1"
+        "customScriptUrl": "https://raw.githubusercontent.com/hiroyay-ms/Azure-Fundamentals-SQL-Server-Migration/main/scripts/"
     },
     "resources": [
         {
@@ -259,7 +259,7 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "[variables('customScriptUrl')]"
+                                "[concat(variables('customScriptUrl'), 'configure-sqlvm.ps1')]"
                             ],
                             "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File configure-sqlvm.ps1"
                         }
