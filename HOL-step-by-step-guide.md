@@ -14,15 +14,23 @@ Sep. 2023
 
 - [Azure ポータル](https://portal.azure.com) へアクセス
 
-- トップ画面の検索バーに **azure data migration service** と入力し、表示される候補より **Azure Data Migration Service** を選択
-
-- **＋ 作成** をクリック
+- トップ画面の検索バーに **azure database migration service** と入力し、表示される候補より **Azure Database Migration Service** を選択
 
   <img src="images/create-migration-project-01.png" />
 
+- **＋ 作成** をクリック
+
   <img src="images/create-migration-project-02.png" />
 
-  <img src="images/create-migration-project-03.png" />
+- 移行シナリオと Database Migration Service
+
+  - **ソース サーバーの種類**: SQL Server
+
+  - **ターゲット サーバーの種類**: Azure SQL Database
+
+  - **Database Migration Service**: Data Migration Service
+
+    <img src="images/create-migration-project-03.png" />
 
   <img src="images/create-migration-project-04.png" />
 
