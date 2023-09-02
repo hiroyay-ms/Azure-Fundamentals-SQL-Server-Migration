@@ -7,10 +7,33 @@ Sep. 2023
 
 ### Contents
 
+- [Exercise 1](#exercise-1)
+
+  - [Azure Database Migration Service の作成](#task-1-azure-database-migration-service-の作成)
+
+  - [セルフホステッド統合ラインタイムの作成と登録](#task-2-セルフホステッド統合ラインタイムの作成と登録)
+
+- [Exercise 2](#exercise-2)
+
+  - [移行先 SQL Database の作成](#task-1-移行先-sql-database-の作成)
+
+  - [サーバー ファイアウォールの設定](#task-2-サーバー-ファイアウォールの設定)
+
+- [Exercise 3](#exercise-3)
+
+  - [Azure Data Studio のインストール](#task-1-azure-data-studio-のインストール)
+
+  - [拡張機能のインストール](#task-2-拡張機能のインストール)
+
+- [Exercise 4](#exercise-4)
+
+  - [SQL Server, SQL Database への接続](#task-1-sql-server-sql-database-への接続)
+
+  - [データベース スキーマの移行](#task-2-データベース-スキーマの移行)
 
 <br />
 
-## Exercise 1: 
+## Exercise 1
 
 ### Task 1: Azure Database Migration Service の作成
 
@@ -60,7 +83,7 @@ Sep. 2023
 
 <br />
 
-### Task 2: 統合ラインタイムのインストール＆登録
+### Task 2: セルフホステッド統合ラインタイムの作成と登録
 
 - 作成した Database Migration Service の管理ブレードを表示
 
@@ -126,29 +149,336 @@ Sep. 2023
 
 <br />
 
-## Exerciese 2: 
+## Exercise 2: 
 
-Task 1: SQL Database の作成
+### Task 1: 移行先 SQL Database の作成
 
+- Azure ポータルのトップ画面で **リソースの作成** をクリック
+
+  <img src="images/add-resources.png" />
+
+- SQL Database の **作成** をクリック
 
   <img src="images/create-sql-database-01.png" />
 
+- SQL データベースの作成
+
+  - **サーバー** の **新規作成** をクリック
+ 
   <img src="images/create-sql-database-02.png" />
 
-  <img src="images/create-sql-database-03.png" />
+  - SQL Database サーバーの作成
 
-  <img src="images/create-sql-database-04.png" />
+    - **サーバーの詳細**
 
-  <img src="images/create-sql-database-05.png" />
+      - **サーバー名**: 任意
 
-  <img src="images/create-sql-database-06.png" />
+      - **場所**: リソース グループと同じリージョンを選択
+    
+    - **認証**
 
-  <img src="images/create-sql-database-07.png" />
+      - **認証方法**: SQL と Azure AD 認証の両方を使用する
 
-  <img src="images/create-sql-database-08.png" />
+      - **Azure AD 管理者の設定をする**: **管理者の設定** をクリック、サインイン中のユーザーを選択
 
-  <img src="images/create-sql-database-09.png" />
+      - **サーバー管理者ログイン**: sqladmin
+
+      - **パスワード**: 任意 (8 文字以上、128 文字以下、英数字、記号の３つ以上を含む)
+
+        <img src="images/create-sql-database-03.png" />
+
+  - **コンピューティングとストレージ** の **データベースの構成** をクリック
+
+    <img src="images/create-sql-database-04.png" />
+
+    - **構成**
+
+      - **サービス レベル**: 汎用目的 (スケーラブルな計算とストレージのオプション)
+
+      - **コンピューティング レベル**: プロビジョニング済み
+
+      - **コストの削減**: いいえ
+
+      - **仮想コア**: 2
+
+      - **データの最大サイズ (GB)**: 5
+
+      - **このデータベース ゾーンに冗長性を持たせますか**: いいえ
+
+        <img src="images/create-sql-database-05.png" />
+
+  - **基本**
+
+    - **プロジェクトの詳細**
+
+      - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+      - **リソース グループ**: ワークショップで使用中のリソース グループ
+    
+    - **データベースの詳細**
+
+      - **データベース名**: AdventureWorks2014LT
+
+      - **サーバー**: 作成した SQL Database サーバー
+
+      - **SQL エラスティック プールを使用しますか**: いいえ
+
+      - **ワークロード環境**: 運用
+
+      - **コンピューティングとストレージ**: 汎用目的 (Gen5, 2 仮想コア, 5GB ストレージ, ゾーン冗長無効)
+    
+    - **バックアップ ストレージの冗長性**
+
+      - **バックアップ ストレージの冗長性**: ローカル冗長バックアップ ストレージ
+
+      <img src="images/create-sql-database-06.png" />
+
+  - **ネットワーク**
+
+    - **ネットワーク接続**
+
+      - **接続方法**: アクセスなし
+
+    - **接続ポリシー**
+
+      - **接続ポリシー**: 既定
+    
+    - **暗号化接続**
+
+      - **TLS の最小バージョン**: TLS 1.2
+
+      <img src="images/create-sql-database-07.png" />
+
+  - **セキュリティ**
+
+    - **Microsoft Defender for SQL を有効にする**: 後で
+
+    - **台帳**: 構成されていません
+
+    - **Server Identity**: 無効
+
+    - **Server level key**: 選択済みのサービス マネージド キー
+
+    - **Database level key (preview)**: 構成されていません
+
+      <img src="images/create-sql-database-08.png" />
+
+  - **追加設定**
+
+    - **既定のデータを使用します**: なし
+
+    - **照合順序**: SQL_Latin_1_General_CP1_CI_AS
+
+    - **メンテナンス期間**: システムの既定値 (午後 5 時から午前 8 時)
+
+      <img src="images/create-sql-database-09.png" />
+
+- **確認および作成** をクリック
+
+- **作成** をクリック
 
   <img src="images/create-sql-database-10.png" />
+
+<br />
+
+### Task 2: サーバー ファイアウォールの設定
+
+- 仮想マシンのグローバル IP アドレスを確認
+
+  ※ [My Global IP](https://www.myglobalip.com/) などのサイトを利用
+
+- 作成した SQL Database の管理ブレードへ移動
+
+- **パブリック ネットワーク アクセス** で **選択したネットワーク** を選択
+
+  <img src="images/server-fire-wall-01.png" />
+
+- **＋ ファイアウォール ルールの追加** をクリック
+
+  <img src="images/server-fire-wall-02.png" />
+
+- ファイアウォール ルール名、確認した仮想マシンのグローバル IP アドレスを入力し **OK** をクリック
+
+  - **ルール名**: AzureDataStudio
+
+  - **開始 IP**: 仮想マシンのグローバル IP アドレス
+
+  - **終了 IP**: 仮想マシンのグローバル IP アドレス
+
+    <img src="images/server-fire-wall-03.png" />
+
+- **保存** をクリック
+
+  <img src="images/server-fire-wall-04.png" />
+
+<br />
+
+## Exercise 3
+
+### Task 1: Azure Data Studio のインストール
+
+- Web ブラウザを起動し
+
+- [Azure Data Studio のダウンロードとインストール](https://learn.microsoft.com/ja-jp/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver16&tabs=redhat-install%2Credhat-uninstall) サイトへアクセス
+
+- Windows ユーザー インストーラーの **64 ビット** をクリック
+
+  <img src="images/install-azure-data-studio-01.png" />
+
+- ダウンロード完了後、**Openfile** をクリックし、インストーラーを起動
+
+- Setup メッセージが表示されるので **OK** をクリック
+
+- **I accept the agreement** を選択し **Next** をクリック
+
+  <img src="images/install-azure-data-studio-02.png />
+
+- インストール先を確認し **Next** をクリック
+
+  <img src="images/install-azure-data-studio-03.png />
+
+- **Next** をクリック
+
+  <img src="images/install-azure-data-studio-04.png />
+
+- **Create a desktop icon**, **Add to PATH** を選択し **Next** をクリック
+
+  <img src="images/install-azure-data-studio-05.png />
+
+- **Install** をクリック
+
+  <img src="images/install-azure-data-studio-06.png />
+
+- **Launch Azure Data Studio** にチェックが付いていることを確認し **Finish** をクリック
+
+  <img src="images/install-azure-data-studio-08.png />
+
+<br />
+
+### Task 2: 拡張機能のインストール
+
+- Azure Data Studio を起動、画面左の Extensions (<img src="images/extension-icon.png" width="20" />) をクリック
+
+  <img src="images/install-migration-extention-01.png" />
+
+- 検索バーに **azure sql** と入力、表示される候補より **Azure SQL Migration** を選択
+
+  <img src="images/install-migration-extention-02.png" />
+
+- **Install** をクリック
+
+  <img src="images/install-migration-extention-03.png" />
+
+- **検索バー** に **sql database** と入力、表示される候補より **SQL Database Projects** を選択
+
+  <img src="images/install-migration-extention-04.png" />
+
+- **Install** をクリック (同時に SQL Server Schema Compare 拡張機能もインストール)
+
+- ３つの拡張機能がインストールされていることを確認
+
+  <img src="images/install-migration-extention-05.png" />
+
+<br />
+
+## Exercise 4
+
+### Task 1: SQL Server, SQL Database への接続
+
+- 画面左の Connections (<img src="images/connection-icon.png" width="20" />) をクリック
+
+- **New Connection** をクリック
+
+  <img src="images/connect-sql-server-01.png" />
+
+- **Connection Details** に必要なパラメーターを入力し **Connect** をクリック
+
+  - **Connection Type**: Microsoft SQL Server
+
+  - **Input type**: Parameters
+
+  - **Serer**: 移行元 SQL Server 名
+
+  - **Authentication type**: SQL Login
+
+  - **User name**: sqladmin
+
+  - **Password**: パスワード
+
+  - **Remember password**: オン
+
+  - **Database**: Default
+
+  - **Encrypt**: Mandatory (True)
+
+  - **Trust server certificate**: False
+
+  - **Server group**: Default
+
+    <img src="images/connect-sql-server-02.png" />
+
+    ※ SQL Server 名、管理者、パスワードは講師に確認
+
+- Connection erro メッセージが表示されるので **Enable Trust server certificate** をクリック
+
+  <img src="images/connect-sql-server-03.png" />
+
+- SQL Server へ接続
+
+  <img src="images/connect-sql-server-04.png" />
+
+- **New Connection** (<img src="images/new-connection-icon.png" />) をクリック
+
+  <img src="images/connect-sql-server-05.png" />
+
+- **Connection Details** に必要なパラメーターを入力し **Connect** をクリック
+
+  - **Connection Type**: Microsoft SQL Server
+
+  - **Input type**: Parameters
+
+  - **Serer**: 移行先 SQL Database サーバー名
+
+  - **Authentication type**: SQL Login
+
+  - **User name**: sqladmin
+
+  - **Password**: パスワード
+
+  - **Remember password**: オン
+
+  - **Database**: Default
+
+  - **Encrypt**: Mandatory (True)
+
+  - **Trust server certificate**: True
+
+  - **Server group**: Default
+
+    <img src="images/connect-sql-server-06.png" />
+
+- SQL Database へ接続
+
+  <img src="images/connect-sql-server-07.png" />
+
+<br />
+
+### Task 2: データベース スキーマの移行
+
+  <img src="images/schema-compare-01.png" />
+
+  <img src="images/schema-compare-02.png" />
+
+  <img src="images/schema-compare-03.png" />
+
+  <img src="images/schema-compare-04.png" />
+
+  <img src="images/schema-compare-05.png" />
+
+  <img src="images/schema-compare-06.png" />
+
+  <img src="images/schema-compare-07.png" />
+
+  <img src="images/schema-compare-08.png" />
 
 <br />
