@@ -31,6 +31,18 @@ Sep. 2023
 
   - [データベース スキーマの移行](#task-2-データベース-スキーマの移行)
 
+- [Exercise 5](#exercise-5)
+
+  - [データベースの移行](#task-1-データベースの移行)
+
+- [Exercise 6](#exercise-6)
+
+  - [メンテナンス期間の構成](#task-1-メンテナンス期間の構成)
+
+  - [バックアップの構成](#task-2-バックアップの構成)
+
+  - [Azure SQL 監査の構成](#task-3-azure-sql-監査の構成)
+
 <br />
 
 ## Exercise 1
@@ -559,7 +571,9 @@ Sep. 2023
 
       <img src="images/get-azure-recommendation-01.png" />
     
-    - パフォーマンス データの取得を開始 (最小 10 分、Azure Data Studio 起動中は **Stop data collection** をクリックするまで取得を継続)
+    - パフォーマンス データの取得を開始
+    
+      (最小 10 分、Azure Data Studio 起動中は **Stop data collection** をクリックするまで取得を継続)
 
       <img src="images/get-azure-recommendation-02.png" />
     
@@ -656,5 +670,63 @@ Sep. 2023
 - データが移行されていることを確認
 
   <img src="images/sql-migration-22.png" />
+
+<br />
+
+## Exercise 6
+
+### Task 1: メンテナンス期間の構成
+
+- Azure ポータルで SQL Database の管理ブレードを表示、**メンテナンス** を選択
+
+- **メンテナンス期間** から **10:00 PM から 6:00 AM タイムゾーン, 金曜日 から 日曜日** を選択
+
+  ※ タイムゾーンは SQL Database が展開されているリージョンのものが表示
+
+  <img src="images/sql-database-maintenance-01.png" />
+
+- **はい** をクリック
+
+  <img src="images/sql-database-maintenance-02.png" />
+
+<br />
+
+### Task 2: バックアップの構成
+
+- SQL Database の **概要** に表示されるサーバー名をクリック
+
+- **バックアップ** を選択し **保有ポリシー** をクリック、データベースを選択し **ポリシーの構成** をクリック
+
+  <img src="images/sql-database-backup-01.png" />
+
+- バックアップの保有期間を 35 日間に変更し **適用** をクリック
+
+  <img src="images/sql-database-backup-02.png" />
+
+- ポリシー適用を確認するメッセージが表示されるので **はい** をクリック
+
+  <img src="images/sql-database-backup-03.png" />
+
+<br />
+
+### Task 3: Azure SQL 監査の構成
+
+- **Azure SQL Database サーバー** の管理ブレードで **監査** を選択
+
+- Azure SQL 監査の設定
+
+  - **Azure SQL 監査を有効にする**: 有効
+  
+  - 監査ログの保存先
+  
+    - **ログ分析**: チェック
+
+    - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+    - **ログ分析**: 展開済みの Log Analytics ワークスペースを選択
+
+  <img src="images/sql-database-audit-01.png" />
+
+- **保存** をクリック
 
 <br />
