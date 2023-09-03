@@ -217,7 +217,7 @@ Sep. 2023
     
     - **データベースの詳細**
 
-      - **データベース名**: AdventureWorks2014LT
+      - **データベース名**: AdventureWorksLT2014
 
       - **サーバー**: 作成した SQL Database サーバー
 
@@ -465,20 +465,196 @@ Sep. 2023
 
 ### Task 2: データベース スキーマの移行
 
+- 移行元 SQL Server のデータベース (AdvantureWorksLT2014) を右クリックし **Schema Compare** をクリック
+
   <img src="images/schema-compare-01.png" />
+
+- Target の **...** をクリック
 
   <img src="images/schema-compare-02.png" />
 
-  <img src="images/schema-compare-03.png" />
+- **Source**, **Target** の **Type**, **Server**, **Database** を選択し **OK** をクリック
+
+  - **Source**
+
+    - **Type**: Database
+
+    - **Server**: 移行元 SQL Server
+
+    - **Database**: AdventureWorksLT2014
+  
+  - **Target**
+
+    - **Type**: Database
+
+    - **Server**: 移行先 SQL Database
+
+    - **Database**: AdventureWorksLT2014
+
+    <img src="images/schema-compare-03.png" />
+
+- **Options** をクリック
 
   <img src="images/schema-compare-04.png" />
 
+- **Include Object Types** タブを選択、**Database Roles**, **Filegroups**, **Users** のチェックを外し **OK** をクリック
+
   <img src="images/schema-compare-05.png" />
+
+- **Compare** をクリック
 
   <img src="images/schema-compare-06.png" />
 
+- **Apply** をクリックして、データベース スキーマの移行を実行
+
+  ※ メッセージが表示されるので **Yes** をクリック
+
   <img src="images/schema-compare-07.png" />
 
+- データベース スキーマが移行されたことを確認
+
   <img src="images/schema-compare-08.png" />
+
+- **SalesLT.Product** テーブルを右クリックし **Select Top 100** を選択
+
+  <img src="images/schema-compare-09.png" />
+
+- テーブルにデータが登録されていないことを確認
+
+  <img src="images/schema-compare-10.png" />
+
+<br />
+
+## Exercise 5
+
+### Task 1: データベースの移行
+
+- 移行元 SQL Server の AdventureWorksLT2014 データベースを右クリックし **Manage** を選択
+
+  <img src="images/sql-migration-01.png" />
+
+- **Azure SQL Migration** を選択し **Migrate to Azure SQL** をクリック
+
+  <img src="images/sql-migration-02.png" />
+
+- **AdventureWorksLT2014** データベースを選択し **Next** をクリック
+
+  <img src="images/sql-migration-03.png" />
+
+  ※ 移行対象データベースの評価を実行
+
+- **Azure SQL Database** を選択、**View/Select** をクリック
+
+  <img src="images/sql-migration-04.png" />
+
+- SQL Database への移行に問題が検出されないことを確認し **Select** をクリック
+
+  <img src="images/sql-migration-05.png" />
+
+  ※ 移行先 SQL Database のサイジング (本ワークショップでは下記手順は不要です)
+
+  - **Get Azure recommendation**
+
+    - **Collect perfomance data now** を選択、パフォーマンス データを保存する場所を指定し **Start** をクリック
+
+      <img src="images/get-azure-recommendation-01.png" />
+    
+    - パフォーマンス データの取得を開始 (最小 10 分、Azure Data Studio 起動中は **Stop data collection** をクリックするまで取得を継続)
+
+      <img src="images/get-azure-recommendation-02.png" />
+    
+    - パフォーマンス データ取得後、**View details** をクリック
+
+      <img src="images/get-azure-recommendation-03.png" />
+    
+    - パフォーマンス データから推奨サイズを提示
+
+      <img src="images/get-azure-recommendation-04.png" />
+
+      <br />    
+
+- **Next** をクリック
+
+  <img src="images/sql-migration-06.png" />
+
+- **Link account** をクリックし、Azure へ接続
+
+  <img src="images/sql-migration-07.png" />
+
+- **Add an account** をクリック、Web ブラウザが起動、Azure へ接続するための資格情報を入力し認証
+
+  <img src="images/sql-migration-08.png" />
+
+- アカウント名が表示されていることを確認し **Close** をクリック
+
+  <img src="images/sql-migration-09.png" />
+
+- 移行先の SQL Database サーバーの情報を入力し **Connect** をクリック
+
+  - **Subscription**: ワークショップで使用中のサブスクリプション
+
+  - **Location**: リソース グループのリージョン
+
+  - **Resource Group**: ワークショップで使用中のリソース グループ
+
+  - **Azure SQL Database Server**: 移行先の Azure SQL Database サーバー
+
+  - **Target user name**: saladmin
+
+  - **Target password**: パスワード
+
+    <img src="images/sql-migration-10.png" />
+
+- **Target database** に **AdventureWorksLT2014** を選択し **Next** をクリック
+
+  <img src="images/sql-migration-11.png" />
+
+- Azure Database Migration Service が選択され、セルフホステッド統合ランタイムと正常に接続されていることを確認し **Next** をクリック
+
+  <img src="images/sql-migration-12.png" />
+
+- **Run validation** をクリック
+
+  <img src="images/sql-migration-13.png" />
+
+- セルフホステッド統合ランタイム、ソース、ターゲットへの接続を確認、**Done** をクリック
+
+  <img src="images/sql-migration-14.png" />
+
+- **Edit** をクリック
+
+  <img src="images/sql-migration-15.png" />
+
+- すべてのテーブルが選択されていることを確認し **Update** をクリック
+
+  <img src="images/sql-migration-16.png" />
+
+- **Next** をクリック
+
+  <img src="images/sql-migration-17.png" />
+
+- 指定した内容を確認し **Start migration** をクリック
+
+  <img src="images/sql-migration-18.png" />
+
+- **Dashboard** で **Database migrations in progress** をクリック
+
+  <img src="images/sql-migration-19.png" />
+
+- 移行の進行状況を確認
+
+  <img src="images/sql-migration-20.png" />
+
+- **Dashboard** で **Database migrations completed** をクリック、正常に移行が完了したことを確認
+
+  <img src="images/sql-migration-21.png" />
+
+- SQL Database の **SalesLT.Product** テーブルを右クリックし **Select Top 100** を選択
+
+  <img src="images/schema-compare-09.png" />
+
+- データが移行されていることを確認
+
+  <img src="images/sql-migration-22.png" />
 
 <br />
