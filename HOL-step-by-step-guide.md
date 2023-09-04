@@ -41,8 +41,6 @@ Sep. 2023
 
   - [バックアップの構成](#task-2-バックアップの構成)
 
-  - [Azure SQL 監査の構成](#task-3-azure-sql-監査の構成)
-
 <br />
 
 ## Exercise 1
@@ -706,27 +704,5 @@ Sep. 2023
 - ポリシー適用を確認するメッセージが表示されるので **はい** をクリック
 
   <img src="images/sql-database-backup-03.png" />
-
-<br />
-
-### Task 3: Azure SQL 監査の構成
-
-- **Azure SQL Database サーバー** の管理ブレードで **監査** を選択
-
-- Azure SQL 監査の設定
-
-  - **Azure SQL 監査を有効にする**: 有効
-  
-  - 監査ログの保存先
-  
-    - **ログ分析**: チェック
-
-    - **サブスクリプション**: ワークショップで使用中のサブスクリプション
-
-    - **ログ分析**: 展開済みの Log Analytics ワークスペースを選択
-
-  <img src="images/sql-database-audit-01.png" />
-
-- **保存** をクリック
 
 <br />
