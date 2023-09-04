@@ -55,7 +55,7 @@ Sep. 2023
 
 ### Task 1: Azure Database Migration Service の作成
 
-- [Azure ポータル](https://portal.azure.com) へアクセス
+- [Azure ポータル](https://portal.azure.com) へアクセス (作業は Azure Data Studio をインストールするサーバー上で行っていただくとスムーズです。)
 
 - トップ画面の検索バーに **azure database migration service** と入力し、表示される候補より **Azure Database Migration Service** を選択
 
@@ -101,7 +101,7 @@ Sep. 2023
 
 <br />
 
-### Task 2: セルフホステッド統合ラインタイムの作成と登録
+### Task 2: セルフホステッド統合ランタイムの作成と登録
 
 - 作成した Database Migration Service の管理ブレードを表示
 
@@ -109,7 +109,7 @@ Sep. 2023
 
   <img src="images/create-migration-project-06.png" />
 
-- **Download and install the integration runtime** をクリック
+- **Download and install the integration runtime** をクリック (ダウンロードは、Azure Data Studio をインストールする仮想マシンで行ってください。)
 
   <img src="images/create-migration-project-07.png" />
 
@@ -161,7 +161,7 @@ Sep. 2023
 
   <img src="images/install-self-hosted-runtime-08.png" />
 
-- Azure ポータルでも統合ラインタイムのノードが登録されていることを確認
+- Azure ポータルでも統合ランタイムのノードが登録されていることを確認
 
   <img src="images/install-self-hosted-runtime-09.png" />
 
@@ -353,27 +353,27 @@ Sep. 2023
 
 - **I accept the agreement** を選択し **Next** をクリック
 
-  <img src="images/install-azure-data-studio-02.png />
+  <img src="images/install-azure-data-studio-02.png" />
 
 - インストール先を確認し **Next** をクリック
 
-  <img src="images/install-azure-data-studio-03.png />
+  <img src="images/install-azure-data-studio-03.png" />
 
 - **Next** をクリック
 
-  <img src="images/install-azure-data-studio-04.png />
+  <img src="images/install-azure-data-studio-04.png" />
 
 - **Create a desktop icon**, **Add to PATH** を選択し **Next** をクリック
 
-  <img src="images/install-azure-data-studio-05.png />
+  <img src="images/install-azure-data-studio-05.png" />
 
 - **Install** をクリック
 
-  <img src="images/install-azure-data-studio-06.png />
+  <img src="images/install-azure-data-studio-06.png" />
 
 - **Launch Azure Data Studio** にチェックが付いていることを確認し **Finish** をクリック
 
-  <img src="images/install-azure-data-studio-08.png />
+  <img src="images/install-azure-data-studio-08.png" />
 
 <br />
 
