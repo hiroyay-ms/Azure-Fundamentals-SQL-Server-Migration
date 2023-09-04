@@ -70,6 +70,13 @@
             "metadata": {
                 "description": "仮想マシン サイズ"
             }
+        },
+        "logAnalyticsWorkspace": {
+            "type": "string",
+            "defaultValue": "log-1",
+            "metadata": {
+                "description": "Log Analytics Workspace"
+            }
         }
     },
     "functions": [],
@@ -423,6 +430,18 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNetworkInterface'))]"
             ]
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2021-06-01",
+            "name": "[parameters('logAnalyticsWorkspace')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30
+            }
         }
     ],
     "outputs": {}
