@@ -43,7 +43,15 @@ Sep. 2023
 
 <br />
 
+### 事前準備環境
+
+<img src="images/mcw-preparation.png" />
+
+<br />
+
 ## Exercise 1
+
+<img src="images/mcw-exercise-1.png" />
 
 ### Task 1: Azure Database Migration Service の作成
 
@@ -160,6 +168,8 @@ Sep. 2023
 <br />
 
 ## Exercise 2: 
+
+<img src="images/mcw-exercise-2.png" />
 
 ### Task 1: 移行先 SQL Database の作成
 
@@ -325,6 +335,8 @@ Sep. 2023
 
 ## Exercise 3
 
+<img src="images/mcw-exercise-3.png" />
+
 ### Task 1: Azure Data Studio のインストール
 
 - Web ブラウザを起動し
@@ -392,6 +404,8 @@ Sep. 2023
 <br />
 
 ## Exercise 4
+
+<img src="images/mcw-exercise-4.png" />
 
 ### Task 1: SQL Server, SQL Database への接続
 
@@ -537,6 +551,8 @@ Sep. 2023
 
 ## Exercise 5
 
+<img src="images/mcw-exercise-5.png" />
+
 ### Task 1: データベースの移行
 
 - 移行元 SQL Server の AdventureWorksLT2014 データベースを右クリックし **Manage** を選択
@@ -672,6 +688,8 @@ Sep. 2023
 <br />
 
 ## Exercise 6
+
+<img src="images/mcw-exercise-6.png" />
 
 ### Task 1: メンテナンス期間の構成
 
