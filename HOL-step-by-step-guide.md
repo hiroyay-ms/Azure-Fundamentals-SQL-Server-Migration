@@ -121,7 +121,7 @@ Sep. 2023
 
   <br />
 
-- 最新バージョン (IntegrationRuntime_5.33.8615.3.msi) を選択し、**Download** をクリック
+- 最新バージョン (IntegrationRuntime_5.33.8627.3.msi) を選択し、**Download** をクリック
 
 - ダウンロード完了後、**Open file** をクリックし、インストーラーを起動
 
@@ -167,7 +167,7 @@ Sep. 2023
 
 <br />
 
-## Exercise 2: 
+## Exercise 2:
 
 <img src="images/mcw-exercise-2.png" />
 
@@ -184,7 +184,7 @@ Sep. 2023
 - SQL データベースの作成
 
   - **サーバー** の **新規作成** をクリック
- 
+
   <img src="images/create-sql-database-02.png" />
 
   - SQL Database サーバーの作成
@@ -194,7 +194,7 @@ Sep. 2023
       - **サーバー名**: 任意
 
       - **場所**: リソース グループと同じリージョンを選択
-    
+
     - **認証**
 
       - **認証方法**: SQL と Azure AD 認証の両方を使用する
@@ -234,7 +234,7 @@ Sep. 2023
       - **サブスクリプション**: ワークショップで使用中のサブスクリプション
 
       - **リソース グループ**: ワークショップで使用中のリソース グループ
-    
+
     - **データベースの詳細**
 
       - **データベース名**: AdventureWorksLT2014
@@ -246,7 +246,7 @@ Sep. 2023
       - **ワークロード環境**: 運用
 
       - **コンピューティングとストレージ**: 汎用目的 (Gen5, 2 仮想コア, 5GB ストレージ, ゾーン冗長無効)
-    
+
     - **バックアップ ストレージの冗長性**
 
       - **バックアップ ストレージの冗長性**: ローカル冗長バックアップ ストレージ
@@ -262,7 +262,7 @@ Sep. 2023
     - **接続ポリシー**
 
       - **接続ポリシー**: 既定
-    
+
     - **暗号化接続**
 
       - **TLS の最小バージョン**: TLS 1.2
@@ -506,7 +506,7 @@ Sep. 2023
     - **Server**: 移行元 SQL Server
 
     - **Database**: AdventureWorksLT2014
-  
+
   - **Target**
 
     - **Type**: Database
@@ -584,22 +584,22 @@ Sep. 2023
     - **Collect perfomance data now** を選択、パフォーマンス データを保存する場所を指定し **Start** をクリック
 
       <img src="images/get-azure-recommendation-01.png" />
-    
+
     - パフォーマンス データの取得を開始
-    
+
       (最小 10 分、Azure Data Studio 起動中は **Stop data collection** をクリックするまで取得を継続)
 
       <img src="images/get-azure-recommendation-02.png" />
-    
+
     - パフォーマンス データ取得後、**View details** をクリック
 
       <img src="images/get-azure-recommendation-03.png" />
-    
+
     - パフォーマンス データから推奨サイズを提示
 
       <img src="images/get-azure-recommendation-04.png" />
 
-      <br />    
+      <br />
 
 - **Next** をクリック
 
