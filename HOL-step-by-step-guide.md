@@ -11,7 +11,7 @@ Sep. 2023
 
   - [Azure Database Migration Service の作成](#task-1-azure-database-migration-service-の作成)
 
-  - [セルフホステッド統合ランタイムの作成と登録](#task-2-セルフホステッド統合ラインタイムの作成と登録)
+  - [セルフホステッド統合ランタイムの作成と登録](#task-2-セルフホステッド統合ランタイムの作成と登録)
 
 - [Exercise 2](#exercise-2)
 
