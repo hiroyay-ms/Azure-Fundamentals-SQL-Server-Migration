@@ -121,7 +121,7 @@ Sep. 2023
 
   <br />
 
-- 最新バージョン (IntegrationRuntime_5.33.8627.3.msi) を選択し、**Download** をクリック
+- 最新バージョン (IntegrationRuntime_5.37.8767.4.msi) を選択し、**Download** をクリック
 
 - ダウンロード完了後、**Open file** をクリックし、インストーラーを起動
 
@@ -305,7 +305,9 @@ Sep. 2023
 
 - 仮想マシンのグローバル IP アドレスを確認
 
-  ※ [My Global IP](https://www.myglobalip.com/) などのサイトを利用
+  ※ Azure Data Studio をインストールするサーバー上で操作する場合は、グローバル IP アドレスの確認は不要
+
+  ※ グローバル IP アドレスを確認できる <a href="https://nordvpn.com/ja/what-is-my-ip/">サイト</a> などを利用
 
 - 作成した SQL Database の管理ブレードへ移動
 
@@ -313,19 +315,23 @@ Sep. 2023
 
   <img src="images/server-fire-wall-01.png" />
 
-- **＋ ファイアウォール ルールの追加** をクリック
+  - Azure Data Studio をインストールするサーバー上の場合は、**クライアント IPv4 アドレスの追加** をクリック
 
-  <img src="images/server-fire-wall-02.png" />
+    <img src="images/server-fire-wall-02-1.png" />
 
-- ファイアウォール ルール名、確認した仮想マシンのグローバル IP アドレスを入力し **OK** をクリック
+  - ローカル PC などで操作の場合は、**＋ ファイアウォール ルールの追加** をクリック
 
-  - **ルール名**: AzureDataStudio
+    <img src="images/server-fire-wall-02.png" />
 
-  - **開始 IP**: 仮想マシンのグローバル IP アドレス
+  - ファイアウォール ルール名、確認した仮想マシンのグローバル IP アドレスを入力し **OK** をクリック
 
-  - **終了 IP**: 仮想マシンのグローバル IP アドレス
+    - **ルール名**: AzureDataStudio
 
-    <img src="images/server-fire-wall-03.png" />
+    - **開始 IP**: 仮想マシンのグローバル IP アドレス
+
+    - **終了 IP**: 仮想マシンのグローバル IP アドレス
+
+      <img src="images/server-fire-wall-03.png" />
 
 - **保存** をクリック
 
@@ -525,9 +531,11 @@ Sep. 2023
 
   <img src="images/schema-compare-05.png" />
 
-- **Compare** をクリック
+  ※ オプションの設定終了時にメッセージが表示され、**Yes** をクリックした場合、初回の比較が実行
 
-  <img src="images/schema-compare-06.png" />
+  - 初回の比較が実行されなかった場合、**Compare** をクリック
+
+    <img src="images/schema-compare-06.png" />
 
 - **Apply** をクリックして、データベース スキーマの移行を実行
 
@@ -569,53 +577,35 @@ Sep. 2023
 
   ※ 移行対象データベースの評価を実行
 
-- **Azure SQL Database** を選択、**View/Select** をクリック
+- Azure SQL Database への移行に問題がないことを確認し **Next** をクリック
 
   <img src="images/sql-migration-04.png" />
 
-- SQL Database への移行に問題が検出されないことを確認し **Select** をクリック
+  - **Start Data Collection** のクリックで移行元データベースのデータを収集 (本ワークショップでは、この手順は省略)
+
+    ※ データ収集は最小 10 分、Azure Data Studio 起動中は Stop data collection をクリックするまで取得を継続
+
+    - データ収集後 **View details** をクリックすることで、推奨 SKU を確認可
+
+      <img src="images/sql-migration-04a.png" />
+
+      <img src="images/sql-migration-04b.png" />
+
+- **Select target type** に **Azure SQL Database** を選択し **Next** をクリック
 
   <img src="images/sql-migration-05.png" />
 
-  ※ 移行先 SQL Database のサイジング (本ワークショップでは下記手順は不要です)
-
-  - **Get Azure recommendation**
-
-    - **Collect perfomance data now** を選択、パフォーマンス データを保存する場所を指定し **Start** をクリック
-
-      <img src="images/get-azure-recommendation-01.png" />
-
-    - パフォーマンス データの取得を開始
-
-      (最小 10 分、Azure Data Studio 起動中は **Stop data collection** をクリックするまで取得を継続)
-
-      <img src="images/get-azure-recommendation-02.png" />
-
-    - パフォーマンス データ取得後、**View details** をクリック
-
-      <img src="images/get-azure-recommendation-03.png" />
-
-    - パフォーマンス データから推奨サイズを提示
-
-      <img src="images/get-azure-recommendation-04.png" />
-
-      <br />
-
-- **Next** をクリック
+- **Link account** をクリックし、Azure へ接続
 
   <img src="images/sql-migration-06.png" />
 
-- **Link account** をクリックし、Azure へ接続
+- **Add an account** をクリック、Web ブラウザが起動、Azure へ接続するための資格情報を入力し認証
 
   <img src="images/sql-migration-07.png" />
 
-- **Add an account** をクリック、Web ブラウザが起動、Azure へ接続するための資格情報を入力し認証
-
-  <img src="images/sql-migration-08.png" />
-
 - アカウント名が表示されていることを確認し **Close** をクリック
 
-  <img src="images/sql-migration-09.png" />
+  <img src="images/sql-migration-08.png" />
 
 - 移行先の SQL Database サーバーの情報を入力し **Connect** をクリック
 
@@ -631,51 +621,49 @@ Sep. 2023
 
   - **Target password**: パスワード
 
-    <img src="images/sql-migration-10.png" />
+    <img src="images/sql-migration-09.png" />
 
 - **Target database** に **AdventureWorksLT2014** を選択し **Next** をクリック
 
-  <img src="images/sql-migration-11.png" />
+  <img src="images/sql-migration-10.png" />
 
 - Azure Database Migration Service が選択され、セルフホステッド統合ランタイムと正常に接続されていることを確認し **Next** をクリック
 
-  <img src="images/sql-migration-12.png" />
+  <img src="images/sql-migration-11.png" />
 
 - **Run validation** をクリック
 
-  <img src="images/sql-migration-13.png" />
+  <img src="images/sql-migration-12.png" />
 
 - セルフホステッド統合ランタイム、ソース、ターゲットへの接続を確認、**Done** をクリック
 
-  <img src="images/sql-migration-14.png" />
+  <img src="images/sql-migration-13.png" />
 
 - **Edit** をクリック
 
+  <img src="images/sql-migration-14.png" />
+
+- 11 個のテーブルが選択されていることを確認し **Update** をクリック
+
   <img src="images/sql-migration-15.png" />
-
-- すべてのテーブルが選択されていることを確認し **Update** をクリック
-
-  <img src="images/sql-migration-16.png" />
 
 - **Next** をクリック
 
-  <img src="images/sql-migration-17.png" />
-
 - 指定した内容を確認し **Start migration** をクリック
 
-  <img src="images/sql-migration-18.png" />
+  <img src="images/sql-migration-16.png" />
 
 - **Dashboard** で **Database migrations in progress** をクリック
 
-  <img src="images/sql-migration-19.png" />
+  <img src="images/sql-migration-17.png" />
 
 - 移行の進行状況を確認
 
-  <img src="images/sql-migration-20.png" />
+  <img src="images/sql-migration-18.png" />
 
 - **Dashboard** で **Database migrations completed** をクリック、正常に移行が完了したことを確認
 
-  <img src="images/sql-migration-21.png" />
+  <img src="images/sql-migration-19.png" />
 
 - SQL Database の **SalesLT.Product** テーブルを右クリックし **Select Top 100** を選択
 
@@ -683,7 +671,7 @@ Sep. 2023
 
 - データが移行されていることを確認
 
-  <img src="images/sql-migration-22.png" />
+  <img src="images/sql-migration-20.png" />
 
 <br />
 
