@@ -11,6 +11,14 @@ Sep. 2023
 
 <br />
 
+### リソースプロバイダーの有効化
+
+<br />
+
+- `Microsoft.DataMigration`
+
+<br />
+
 ### 共通リソースの展開
 
 <br />
